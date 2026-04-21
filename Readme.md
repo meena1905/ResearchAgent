@@ -1,32 +1,148 @@
-# ResearchAgent: Autonomous Founder & CEO Intelligence
+# 🔍 ResearchAgent — Autonomous Founder & CEO Intelligence
 
-An advanced autonomous research agent designed to "navigate, explore, and organize insights" about global tech leaders.
+> An autonomous AI research agent that investigates global tech leaders using multi-step reasoning, web search, and deep link exploration — built from scratch without LangChain or LangGraph.
 
-Developed for the AI Agent Developer Internship at LegalSeva.org.
+---
 
-## Agent Architecture
+## 🧠 How It Works
 
-Unlike static scrapers, this agent uses a **Multi-Step Reasoning Loop** to autonomously investigate a subject:
+Unlike a simple web scraper, ResearchAgent uses a **3-Phase Autonomous Reasoning Loop**:
 
-- **Query Generation** — The agent analyzes the target's name and generates targeted search queries  
-  (e.g., "Sam Altman recent investments 2026", "Sam Altman leadership philosophy")
+```
+Phase 1: Broad Discovery
+  └─ Generates 4 targeted search queries about the founder
+  └─ Searches DuckDuckGo and collects snippets + URLs
 
-- **Autonomous Navigation** — Identifies high-value technical and news URLs from DuckDuckGo search results  
+Phase 2: Internal Reflection & Deep Dive
+  └─ LLM reviews all snippets and identifies the most valuable URL
+  └─ Scrapes that page in full for deep context (up to 4000 chars)
+  └─ Stores findings in rolling memory (last 10 turns)
 
-- **Deep Exploration** — Follows links and scrapes detailed content using BeautifulSoup4, going beyond surface-level summaries  
+Phase 3: Structured Report Generation
+  └─ LLM synthesizes everything into an 8-section Markdown report
+  └─ Report saved to /output with source attribution log
+```
 
-- **Internal Reflection** — Reviews gathered data to identify information gaps or contradictions  
+---
 
-- **Synthesis** — Structures information into a professional Markdown report with source attribution and focus on 2025–2026 developments  
+## 📁 Project Structure
 
-## Key Features
+```
+ResearchAgent/
+│
+├── agent.py               # Main agent pipeline
+├── .env                   # API keys (not committed)
+├── requirements.txt       # Dependencies
+├── output/                # Generated reports saved here
+│   └── sam_altman_report.md
+└── README.md
+```
 
-- **Framework-Free Orchestration** — Built from scratch using Python and Groq (Llama 3.3 70B)  
-- **2026-Aware** — Prioritizes recent news and up-to-date information  
-- **Structured Outputs** — Generates clean Markdown reports with headers, bullet points, and citations  
+---
 
-## Setup & Installation
+## ⚙️ Setup & Installation
 
-1. Install dependencies:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourusername/ResearchAgent.git
+cd ResearchAgent
+```
+
+### 2. Install dependencies
+
 ```bash
 pip install -r requirements.txt
+```
+
+### 3. Set up your API key
+
+Create a `.env` file in the root directory:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+Get your free Groq API key at: [console.groq.com](https://console.groq.com)
+
+---
+
+## 🚀 Usage
+
+```bash
+python agent.py --founder "Sam Altman"
+```
+
+```bash
+python agent.py --founder "Elon Musk"
+```
+
+```bash
+python agent.py --founder "Sundar Pichai"
+```
+
+The agent will print its live progress and save the final report to the `output/` folder.
+
+---
+
+## 📄 Sample Output
+
+Each generated report contains these sections:
+
+| Section | Description |
+|---|---|
+| **Personal Background** | Early life, education, upbringing |
+| **Career Journey** | Key roles and milestones |
+| **Companies Founded / Led** | Organizations they built or lead |
+| **Key Achievements & Awards** | Notable recognitions |
+| **Leadership Style & Vision** | Philosophy and management approach |
+| **Recent News & Developments** | Focus on 2025–2026 activity |
+| **Notable Quotes** | Direct quotes attributed to the subject |
+| **Summary** | 3-sentence assessment by the agent |
+
+Plus an **Agent Navigation Log** listing all sources explored.
+
+---
+
+## 🛠 Tech Stack
+
+| Component | Technology |
+|---|---|
+| LLM Engine | Groq API — Llama 3.3 70B Versatile |
+| Web Search | DuckDuckGo Search (duckduckgo-search) |
+| Web Scraping | BeautifulSoup4 + Requests |
+| Memory | Rolling in-context window (last 10 turns) |
+| Orchestration | Pure Python — no LangChain, no LangGraph |
+| Output Format | Structured Markdown reports |
+
+---
+
+## 📦 requirements.txt
+
+```
+requests
+python-dotenv
+duckduckgo-search
+beautifulsoup4
+```
+
+---
+
+## 🔑 Key Design Decisions
+
+- **Framework-Free** — Entire agent loop built from scratch in Python. No LangChain or LangGraph dependency.
+- **Rolling Memory** — The agent retains the last 10 conversation turns so context is preserved across phases without exceeding token limits.
+- **2026-Aware** — Search queries explicitly target 2025–2026 developments to avoid stale information.
+- **Reflection Step** — Before scraping, the LLM reflects on all snippets and picks the single most valuable URL — mimicking human research intuition.
+- **Clean Scraping** — Scripts, styles, navbars, and footers are stripped before text extraction to reduce noise.
+
+---
+
+## ⚠️ Limitations
+
+- Scraping is limited to publicly accessible pages (no login-gated content)
+- Each scraped page is capped at 4000 characters to stay within token limits
+- DuckDuckGo may occasionally rate-limit high-frequency searches
+- Report quality depends on the availability of recent, high-quality web content about the subject
+
+---
